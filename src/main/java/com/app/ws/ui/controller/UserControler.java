@@ -1,5 +1,6 @@
 package com.app.ws.ui.controller;
 
+import com.app.ws.ui.model.request.UpdateUserDetailRequestModel;
 import com.app.ws.ui.model.request.UserDetailRequestModel;
 import com.app.ws.ui.model.response.UserRest;
 import jakarta.validation.Valid;
@@ -73,10 +74,24 @@ public class UserControler {
 
 
 
-    @PutMapping
-    public String updateUser()
+    @PutMapping ( path="/{userId}", consumes = {
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_JSON_VALUE
+            },
+            produces = {
+                        MediaType.APPLICATION_XML_VALUE,
+                        MediaType.APPLICATION_JSON_VALUE
+                        } )
+    public UserRest updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailRequestModel userDetails)
     {
-        return "update user was called";
+        UserRest storedUserDetails = users.get(userId);
+        storedUserDetails.setFirstName(userDetails.getFirstName());
+        storedUserDetails.setLastName(userDetails.getLastName());
+
+
+        users.put(userId, storedUserDetails);
+
+        return storedUserDetails;
     }
 
     @DeleteMapping
